@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Numi - Арифметична практика</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+        <style>
+            :root {
+                --primary: #4f46e5;
+                --primary-light: #6366f1;
+                --secondary: #ec4899;
+                --accent: #8b5cf6;
+                --bg-color: #f8fafc;
+                --card-bg: #ffffff;
+                --text-primary: #1e293b;
+                --text-secondary: #64748b;
+                --success: #10b981;
+                --error: #ef4444;
+                --warning: #f59e0b;
+                --border-radius: 16px;
+                --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Nunito', sans-serif;
+                background-color: var(--bg-color);
+                color: var(--text-primary);
+                line-height: 1.6;
+                padding: 1.5rem;
+                min-height: 100vh;
+                background-image:
+                    radial-gradient(circle at 25px 25px, rgba(79, 70, 229, 0.1) 2%, transparent 0%),
+                    radial-gradient(circle at 75px 75px, rgba(236, 72, 153, 0.1) 2%, transparent 0%);
+                background-size: 100px 100px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+            }
+
+            .container {
+                max-width: 800px;
+                width: 100%;
+                margin: 0 auto;
+            }
+
+            header {
+                text-align: center;
+                margin-bottom: 2.5rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+                font-weight: 800;
+                color: var(--primary);
+                margin-bottom: 0.75rem;
+                position: relative;
+                display: inline-block;
+            }
+
+            h1::after {
+                content: "";
+                position: absolute;
+                bottom: -8px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 70%;
+                height: 4px;
+                background: linear-gradient(to right, var(--primary), var(--secondary));
+                border-radius: 2px;
+            }
+
+            .subtitle {
+                color: var(--text-secondary);
+                font-size: 1.1rem;
+            }
+
+            .settings-card {
+                background-color: var(--card-bg);
+                border-radius: var(--border-radius);
+                box-shadow: var(--box-shadow);
+                padding: 2rem;
+                margin-bottom: 2rem;
+                border: 1px solid rgba(79, 70, 229, 0.1);
+            }
+
+            .settings-title {
+                font-size: 1.3rem;
+                font-weight: 700;
+                color: var(--primary);
+                margin-bottom: 1.5rem;
+                text-align: center;
+            }
+
+            .settings-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .setting-group {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .setting-label {
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: var(--text-primary);
+            }
+
+            select,
+            input[type="number"] {
+                padding: 0.75rem;
+                border-radius: 8px;
+                border: 1px solid #e2e8f0;
+                font-size: 1rem;
+                font-family: inherit;
+                background-color: #f8fafc;
+                transition: border-color 0.2s, box-shadow 0.2s;
+            }
+
+            select:focus,
+            input:focus {
+                outline: none;
+                border-color: var(--primary-light);
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            }
+
+            .actions {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .btn {
+                padding: 0.75rem 2rem;
+                border-radius: 50px;
+                border: none;
+                font-size: 1rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                font-family: inherit;
+            }
+
+            .btn-primary {
+                background: linear-gradient(to right, var(--primary), var(--primary-light));
+                color: white;
+                box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+            }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
+            }
+
+            .btn-primary:active {
+                transform: translateY(0);
+            }
+
+            .question-card {
+                background-color: var(--card-bg);
+                border-radius: var(--border-radius);
+                box-shadow: var(--box-shadow);
+                padding: 2.5rem;
+                margin-bottom: 2rem;
+                text-align: center;
+                border: 1px solid rgba(79, 70, 229, 0.1);
+                display: none;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .question {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                overflow-wrap: break-word;
+            }
+
+            .answer {
+                font-size: 2rem;
+                font-weight: 700;
+                color: var(--success);
+                margin-top: 1.5rem;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.5s, transform 0.5s;
+                overflow-wrap: break-word;
+            }
+
+            .answer.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .timer-container {
+                width: 100%;
+                height: 8px;
+                background-color: #e2e8f0;
+                border-radius: 4px;
+                margin-bottom: 2rem;
+                overflow: hidden;
+            }
+
+            .timer-bar {
+                height: 100%;
+                width: 100%;
+                background: linear-gradient(to right, var(--primary), var(--secondary));
+                transform-origin: left;
+                transition: transform linear;
+            }
+
+            .next-btn {
+                display: none;
+                margin-top: 1.5rem;
+            }
+
+            .progress {
+                text-align: center;
+                font-weight: 600;
+                color: var(--text-secondary);
+                margin-top: 1rem;
+            }
+
+            .score {
+                font-weight: 700;
+                color: var(--primary);
+            }
+
+            .pulse {
+                animation: pulse 2s infinite;
+            }
+
+            .digit-selection {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                margin-top: 0.5rem;
+            }
+
+            .digit-btn {
+                padding: 0.5rem 0.75rem;
+                border-radius: 6px;
+                border: 1px solid #e2e8f0;
+                background-color: #f8fafc;
+                font-size: 0.9rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .digit-btn.selected {
+                background-color: var(--primary);
+                color: white;
+                border-color: var(--primary);
+            }
+
+            @keyframes pulse {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5);
+                }
+
+                70% {
+                    box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+                }
+
+                100% {
+                    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+                }
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @media (max-width: 640px) {
+                h1 {
+                    font-size: 2rem;
+                }
+
+                .settings-card,
+                .question-card {
+                    padding: 1.5rem;
+                }
+
+                .question {
+                    font-size: 2rem;
+                }
+
+                .answer {
+                    font-size: 1.8rem;
+                }
+
+                .digit-selection {
+                    justify-content: center;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <header>
+                <h1>Numi - Арифметична практика</h1>
+                <p class="subtitle">Перевірте свої навички усного рахунку з часовими арифметичними завданнями</p>
+            </header>
+
+            <div class="settings-card" id="settingsCard">
+                <h2 class="settings-title">Налаштуйте свою практику</h2>
+
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <label class="setting-label">Кількість цифр у числі</label>
+                        <div class="digit-selection" id="digitSelection">
+                            <button class="digit-btn" data-value="2">2</button>
+                            <button class="digit-btn selected" data-value="3">3</button>
+                            <button class="digit-btn" data-value="4">4</button>
+                            <button class="digit-btn" data-value="5">5</button>
+                            <button class="digit-btn" data-value="6">6</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label class="setting-label" for="timerDuration">Таймер (секунди)</label>
+                        <input type="number" id="timerDuration" min="3" max="60" value="10">
+                    </div>
+
+                    <div class="setting-group">
+                        <label class="setting-label" for="operations">Операції</label>
+                        <select id="operations">
+                            <option value="all">Усі операції</option>
+                            <option value="add">Додавання (+)</option>
+                            <option value="subtract">Віднімання (-)</option>
+                            <option value="multiply">Множення (×)</option>
+                            <option value="divide">Ділення (÷)</option>
+                            <option value="add-subtract">Додавання & Віднімання</option>
+                            <option value="multiply-divide">Множення & Ділення</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label class="setting-label" for="questionCount">Кількість запитань</label>
+                        <input type="number" id="questionCount" min="5" max="50" value="10">
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button id="startBtn" class="btn btn-primary pulse">Почати практику</button>
+                </div>
+            </div>
+
+            <div class="question-card" id="questionCard">
+                <div class="timer-container">
+                    <div class="timer-bar" id="timerBar"></div>
+                </div>
+
+                <div class="question" id="question"></div>
+                <div class="answer" id="answer"><span id="answerValue"></span></div>
+
+                <div class="actions">
+                    <button id="nextBtn" class="btn btn-primary next-btn">Наступне питання</button>
+                </div>
+            </div>
+
+            <div class="progress" id="progress">
+                Питання <span id="currentQuestion">0</span>/<span id="totalQuestions">0</span> •
+                Результат: <span id="score" class="score">0</span>
+            </div>
+        </div>
+
+        <script>
+
+const settingsCard = document.getElementById('settingsCard');
+const questionCard = document.getElementById('questionCard');
+const questionEl = document.getElementById('question');
+const answerEl = document.getElementById('answer');
+const answerValueEl = document.getElementById('answerValue');
+const timerBar = document.getElementById('timerBar');
+const startBtn = document.getElementById('startBtn');
+const nextBtn = document.getElementById('nextBtn');
+const progressEl = document.getElementById('progress');
+const currentQuestionEl = document.getElementById('currentQuestion');
+const totalQuestionsEl = document.getElementById('totalQuestions');
+const scoreEl = document.getElementById('score');
+const digitButtons = document.querySelectorAll('.digit-btn');
+
+
+const digitSelection = document.getElementById('digitSelection');
+const timerDurationInput = document.getElementById('timerDuration');
+const operationsSelect = document.getElementById('operations');
+const questionCountInput = document.getElementById('questionCount');
+
+let currentQuestion = 0;
+let totalQuestions = 10;
+let score = 0;
+let timerDuration = 10;
+let currentAnswer = 0;
+let timerInterval;
+let autoNextTimeout;
+let selectedDigits = 3; 
+let questionId = 0; 
+
+
+startBtn.addEventListener('click', startPractice);
+nextBtn.addEventListener('click', nextQuestion);
+
+
+digitButtons.forEach(button => {
+    button.addEventListener('click', function () {
+
+        
+        digitButtons.forEach(btn => btn.classList.remove('selected'));
+
+        
+        this.classList.add('selected');
+
+        
+        selectedDigits = parseInt(this.dataset.value);
+    });
+});
+
+
+function initializeApp() {
+
+    questionCard.style.display = 'none';
+    nextBtn.style.display = 'none';
+
+    
+    currentQuestion = 0;
+    score = 0;
+    updateProgress();
+}
+
+
+function startPractice() {
+
+    timerDuration = parseInt(timerDurationInput.value);
+    const operations = operationsSelect.value;
+    totalQuestions = parseInt(questionCountInput.value);
+
+   
+    if (timerDuration < 3 || timerDuration > 60) {
+        alert('Тривалість таймера має бути від 3 до 60 секунд');
+        return;
+    }
+
+    if (totalQuestions < 5 || totalQuestions > 50) {
+        alert('Кількість запитань має бути від 5 до 50');
+        return;
+    }
+
+   
+    settingsCard.style.display = 'none';
+    questionCard.style.display = 'block';
+    questionCard.style.animation = 'fadeIn 0.5s forwards';
+
+    
+    currentQuestion = 0;
+    score = 0;
+    updateProgress();
+
+    
+    generateQuestion();
+}
+
+
+function generateQuestion() {
+    
+    if (timerInterval) {
+        clearTimeout(timerInterval);
+        timerInterval = null;
+    }
+    if (autoNextTimeout) {
+        clearTimeout(autoNextTimeout);
+        autoNextTimeout = null;
+    }
+   
+    answerEl.classList.remove('show');
+    nextBtn.style.display = 'none';
+
+    
+    currentQuestion++;
+    questionId++;
+    const thisQuestionId = questionId;
+    updateProgress();
+
+    
+    const numberLength = selectedDigits;
+    const operations = operationsSelect.value;
+
+    const minNum = Math.pow(10, numberLength - 1);
+    const maxNum = Math.pow(10, numberLength) - 1;
+
+    let num1, num2, operation, operationSymbol;
+
+    switch (operations) {
+        case 'add':
+            operation = 'addition';
+            operationSymbol = '+';
+
+
+            if (numberLength >= 5) {
+                num1 = getRandomInt(minNum, maxNum);
+                num2 = getRandomInt(minNum / 10, minNum * 2);
+            } else {
+                num1 = getRandomInt(minNum, maxNum);
+                num2 = getRandomInt(minNum, maxNum);
+            }
+
+            currentAnswer = num1 + num2;
+            break;
+
+        case 'subtract':
+            operation = 'subtraction';
+            operationSymbol = '-';
+
+            num1 = getRandomInt(minNum, maxNum);
+
+            if (numberLength >= 5) {
+                num2 = getRandomInt(minNum / 10, num1 / 2);
+            } else {
+                num2 = getRandomInt(minNum / 2, num1);
+            }
+
+            currentAnswer = num1 - num2;
+            break;
+
+        case 'multiply':
+            operation = 'multiplication';
+            operationSymbol = '×';
+
+            
+            if (numberLength >= 5) {
+                
+                num1 = getRandomInt(minNum / 10, maxNum / 5);
+                num2 = getRandomInt(2, 20); 
+            } else if (numberLength == 4) {
+                num1 = getRandomInt(minNum / 5, maxNum / 2);
+                num2 = getRandomInt(2, 50);
+            } else if (numberLength == 3) {
+                num1 = getRandomInt(minNum / 2, maxNum);
+                num2 = getRandomInt(2, 100);
+            } else {
+                num1 = getRandomInt(minNum, maxNum);
+                num2 = getRandomInt(2, minNum / 2);
+            }
+
+            currentAnswer = num1 * num2;
+            break;
+
+        case 'divide':
+            operation = 'division';
+            operationSymbol = '÷';
+
+           
+            if (numberLength >= 5) {
+                currentAnswer = getRandomInt(minNum / 100, minNum / 10);
+                num2 = getRandomInt(2, 15);
+            } else if (numberLength >= 4) {
+                currentAnswer = getRandomInt(minNum / 50, minNum / 5);
+                num2 = getRandomInt(2, 20);
+            } else {
+                currentAnswer = getRandomInt(10, minNum / 2);
+                num2 = getRandomInt(2, Math.min(50, minNum / 10));
+            }
+
+            num1 = currentAnswer * num2;
+            break;
+
+        case 'add-subtract':
+            operation = Math.random() > 0.5 ? 'addition' : 'subtraction';
+            operationSymbol = operation === 'addition' ? '+' : '-';
+
+            if (operation === 'addition') {
+        
+                if (numberLength >= 5) {
+                    num1 = getRandomInt(minNum, maxNum);
+                    num2 = getRandomInt(minNum / 10, minNum * 2);
+                } else {
+                    num1 = getRandomInt(minNum, maxNum);
+                    num2 = getRandomInt(minNum, maxNum);
+                }
+                currentAnswer = num1 + num2;
+            } else {
+                num1 = getRandomInt(minNum, maxNum);
+             
+                if (numberLength >= 5) {
+                    num2 = getRandomInt(minNum / 10, num1 / 2);
+                } else {
+                    num2 = getRandomInt(minNum / 2, num1);
+                }
+                currentAnswer = num1 - num2;
+            }
+            break;
+
+        case 'multiply-divide':
+            operation = Math.random() > 0.5 ? 'multiplication' : 'division';
+            operationSymbol = operation === 'multiplication' ? '×' : '÷';
+
+            if (operation === 'multiplication') {
+          
+                if (numberLength >= 5) {
+                    num1 = getRandomInt(minNum / 10, maxNum / 5);
+                    num2 = getRandomInt(2, 20);
+                } else if (numberLength == 4) {
+                    num1 = getRandomInt(minNum / 5, maxNum / 2);
+                    num2 = getRandomInt(2, 50);
+                } else if (numberLength == 3) {
+                    num1 = getRandomInt(minNum / 2, maxNum);
+                    num2 = getRandomInt(2, 100);
+                } else {
+                    num1 = getRandomInt(minNum, maxNum);
+                    num2 = getRandomInt(2, minNum / 2);
+                }
+                currentAnswer = num1 * num2;
+            } else {
+                
+                if (numberLength >= 5) {
+                    currentAnswer = getRandomInt(minNum / 100, minNum / 10);
+                    num2 = getRandomInt(2, 15);
+                } else if (numberLength >= 4) {
+                    currentAnswer = getRandomInt(minNum / 50, minNum / 5);
+                    num2 = getRandomInt(2, 20);
+                } else {
+                    currentAnswer = getRandomInt(10, minNum / 2);
+                    num2 = getRandomInt(2, Math.min(50, minNum / 10));
+                }
+                num1 = currentAnswer * num2;
+            }
+            break;
+
+        default: // 'all'
+            const ops = ['addition', 'subtraction', 'multiplication', 'division'];
+            operation = ops[Math.floor(Math.random() * ops.length)];
+
+            if (operation === 'addition') {
+                operationSymbol = '+';
+                if (numberLength >= 5) {
+                    num1 = getRandomInt(minNum, maxNum);
+                    num2 = getRandomInt(minNum / 10, minNum * 2);
+                } else {
+                    num1 = getRandomInt(minNum, maxNum);
+                    num2 = getRandomInt(minNum, maxNum);
+                }
+                currentAnswer = num1 + num2;
+            } else if (operation === 'subtraction') {
+                operationSymbol = '-';
+                num1 = getRandomInt(minNum, maxNum);
+                if (numberLength >= 5) {
+                    num2 = getRandomInt(minNum / 10, num1 / 2);
+                } else {
+                    num2 = getRandomInt(minNum / 2, num1);
+                }
+                currentAnswer = num1 - num2;
+            } else if (operation === 'multiplication') {
+                operationSymbol = '×';
+                if (numberLength >= 5) {
+                    num1 = getRandomInt(minNum / 10, maxNum / 5);
+                    num2 = getRandomInt(2, 20);
+                } else if (numberLength == 4) {
+                    num1 = getRandomInt(minNum / 5, maxNum / 2);
+                    num2 = getRandomInt(2, 50);
+                } else if (numberLength == 3) {
+                    num1 = getRandomInt(minNum / 2, maxNum);
+                    num2 = getRandomInt(2, 100);
+                } else {
+                    num1 = getRandomInt(minNum, maxNum);
+                    num2 = getRandomInt(2, minNum / 2);
+                }
+                currentAnswer = num1 * num2;
+            } else { 
+                operationSymbol = '÷';
+                if (numberLength >= 5) {
+                    currentAnswer = getRandomInt(minNum / 100, minNum / 10);
+                    num2 = getRandomInt(2, 15);
+                } else if (numberLength >= 4) {
+                    currentAnswer = getRandomInt(minNum / 50, minNum / 5);
+                    num2 = getRandomInt(2, 20);
+                } else {
+                    currentAnswer = getRandomInt(10, minNum / 2);
+                    num2 = getRandomInt(2, Math.min(50, minNum / 10));
+                }
+                num1 = currentAnswer * num2;
+            }
+    }
+
+   
+    questionEl.textContent = `${num1} ${operationSymbol} ${num2}`;
+
+   
+    startTimer(thisQuestionId);
+    answerValueEl.textContent = '';
+}
+
+function startTimer(thisQuestionId) {
+    
+    timerBar.style.transition = 'none';
+    timerBar.style.transform = 'scaleX(1)';
+    void timerBar.offsetWidth;
+    timerBar.style.transition = `transform ${timerDuration}s linear`;
+    timerBar.style.transform = 'scaleX(0)';
+
+    if (timerInterval) clearTimeout(timerInterval);
+    timerInterval = setTimeout(() => showAnswer(thisQuestionId), timerDuration * 1000);
+}
+
+function showAnswer(thisQuestionId) {
+    if (thisQuestionId !== questionId) return;
+    answerValueEl.textContent = currentAnswer;
+    answerEl.classList.add('show');
+    nextBtn.style.display = 'block';
+
+    if (currentQuestion >= totalQuestions) {
+        nextBtn.textContent = 'Показати результат';
+    }
+
+    if (currentQuestion < totalQuestions) {
+        autoNextTimeout = setTimeout(() => {
+            if (answerEl.classList.contains('show') && questionCard.style.display !== 'none') {
+                nextQuestion();
+            }
+        }, 2000);
+    }
+}
+
+
+function nextQuestion() {
+
+    if (timerInterval) {
+        clearTimeout(timerInterval);
+        timerInterval = null;
+    }
+    if (autoNextTimeout) {
+        clearTimeout(autoNextTimeout);
+        autoNextTimeout = null;
+    }
+    if (currentQuestion >= totalQuestions) {
+        showFinalScore();
+    } else {
+        generateQuestion();
+    }
+}
+
+function showFinalScore() {
+    alert(`Практику завершено!\nВаш результат: ${score} з ${totalQuestions}`);
+
+    
+    settingsCard.style.display = 'block';
+    questionCard.style.display = 'none';
+    nextBtn.textContent = 'Наступне питання';
+
+
+    currentQuestion = 0;
+    score = 0;
+    updateProgress();
+}
+
+
+function updateProgress() {
+    currentQuestionEl.textContent = currentQuestion;
+    totalQuestionsEl.textContent = totalQuestions;
+    scoreEl.textContent = score;
+}
+
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+initializeApp();
+        
+        </script>
+
+
+    </body>
+
+</html>

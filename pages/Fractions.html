@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numi - Дроби</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #8b5cf6;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+            background-image:
+                radial-gradient(circle at 25px 25px, rgba(99, 102, 241, 0.15) 2%, transparent 0%),
+                radial-gradient(circle at 75px 75px, rgba(236, 72, 153, 0.15) 2%, transparent 0%);
+            background-size: 100px 100px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-top: 1.5rem;
+            position: relative;
+            top: 0;
+            background-color: var(--bg-color);
+            z-index: 10;
+            padding-bottom: 1rem;
+            background-image:
+                radial-gradient(circle at 25px 25px, rgba(99, 102, 241, 0.15) 2%, transparent 0%),
+                radial-gradient(circle at 75px 75px, rgba(236, 72, 153, 0.15) 2%, transparent 0%);
+            background-size: 100px 100px;
+        }
+
+        .header::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::before,
+        h1::after {
+            content: "✦";
+            font-size: 1.5rem;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+            opacity: 0.6;
+        }
+
+        h1::before {
+            left: -2rem;
+        }
+
+        h1::after {
+            right: -2rem;
+        }
+
+        .fractions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .fraction-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .fraction-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+
+        .fraction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .fraction-card h2 {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            font-size: 1.3rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px dashed rgba(99, 102, 241, 0.3);
+        }
+
+        .fraction-visual {
+            text-align: center;
+            font-size: 2rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background-color: rgba(99, 102, 241, 0.05);
+            border-radius: var(--border-radius);
+        }
+
+        .numerator {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            display: block;
+        }
+
+        .denominator {
+            padding-top: 0.5rem;
+            display: block;
+        }
+
+        .fraction-example {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 1rem;
+        }
+
+        .fraction-example:last-child {
+            border-bottom: none;
+        }
+
+        .operation {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .result {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .explanation {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px;
+            border-radius: 50%;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 100;
+            transform: translateY(20px);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-appear {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h1::before,
+            h1::after {
+                display: none;
+            }
+
+            .fractions-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Numi - Дроби</h1>
+    </div>
+
+    <div class="fractions-container" id="fractionsContainer">
+       
+        <div class="fraction-card card-appear" style="animation-delay: 0.1s;">
+            <h2>Основні дроби</h2>
+            <div class="fraction-visual">
+                <span class="numerator">3</span>
+                <span class="denominator">4</span>
+            </div>
+            <div class="fraction-example">
+                <span>Чисельник (верхнє число)</span>
+                <span class="result">3</span>
+            </div>
+            <div class="fraction-example">
+                <span>Знаменник (нижнє число)</span>
+                <span class="result">4</span>
+            </div>
+            <div class="fraction-example">
+                <span>Десятковий запис</span>
+                <span class="result">0.75</span>
+            </div>
+            <div class="explanation">
+                Дріб показує, скільки частин від цілого ми беремо.
+            </div>
+        </div>
+
+       
+        <div class="fraction-card card-appear" style="animation-delay: 0.2s;">
+            <h2>Додавання дробів</h2>
+            <div class="fraction-visual">
+                <span class="numerator">1 + 1</span>
+                <span class="denominator">4 &nbsp; 2</span>
+            </div>
+            <div class="fraction-example">
+                <span>1/4 + 1/2 =</span>
+                <span class="result">3/4</span>
+            </div>
+            <div class="explanation">
+                Щоб додати дроби з різними знаменниками, потрібно привести їх до спільного знаменника.
+            </div>
+        </div>
+
+        
+        <div class="fraction-card card-appear" style="animation-delay: 0.3s;">
+            <h2>Віднімання дробів</h2>
+            <div class="fraction-visual">
+                <span class="numerator">3 - 1</span>
+                <span class="denominator">4 &nbsp; 2</span>
+            </div>
+            <div class="fraction-example">
+                <span>3/4 - 1/2 =</span>
+                <span class="result">1/4</span>
+            </div>
+            <div class="explanation">
+                Аналогічно додаванню, але віднімаємо чисельники після приведення до спільного знаменника.
+            </div>
+        </div>
+
+      
+        <div class="fraction-card card-appear" style="animation-delay: 0.4s;">
+            <h2>Множення дробів</h2>
+            <div class="fraction-visual">
+                <span class="numerator">2 × 3</span>
+                <span class="denominator">3 &nbsp; 4</span>
+            </div>
+            <div class="fraction-example">
+                <span>2/3 × 3/4 =</span>
+                <span class="result">6/12 = 1/2</span>
+            </div>
+            <div class="explanation">
+                Множимо чисельник з чисельником, знаменник з знаменником, потім спрощуємо.
+            </div>
+        </div>
+
+  
+        <div class="fraction-card card-appear" style="animation-delay: 0.5s;">
+            <h2>Ділення дробів</h2>
+            <div class="fraction-visual">
+                <span class="numerator">2 ÷ 3</span>
+                <span class="denominator">3 &nbsp; 4</span>
+            </div>
+            <div class="fraction-example">
+                <span>2/3 ÷ 3/4 =</span>
+                <span class="result">8/9</span>
+            </div>
+            <div class="explanation">
+                Ділення замінюємо на множення на обернений дріб (перевертаємо другий дріб).
+            </div>
+        </div>
+
+    
+        <div class="fraction-card card-appear" style="animation-delay: 0.6s;">
+            <h2>Скорочення дробів</h2>
+            <div class="fraction-visual">
+                <span class="numerator">6</span>
+                <span class="denominator">8</span>
+            </div>
+            <div class="fraction-example">
+                <span>6/8 =</span>
+                <span class="result">3/4</span>
+            </div>
+            <div class="explanation">
+                Ділимо чисельник і знаменник на їхній найбільший спільний дільник (НСД).
+            </div>
+        </div>
+    </div>
+
+    <button id="backToTopBtn" class="back-to-top" onclick="scrollToTop()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6" />
+        </svg>
+    </button>
+
+    <script>
+   
+        const backToTopBtn = document.getElementById('backToTopBtn');
+
+   
+        window.addEventListener('scroll', function () {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+     
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card-appear');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+
+</html>
